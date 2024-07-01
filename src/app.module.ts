@@ -1,11 +1,32 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { Transport, ClientsModule } from '@nestjs/microservices'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module'
+import { UsersModule } from './users/users.module'
+import { MathModule } from './math/math.module'
+import { MATH_SERVICE } from './math/math.constants'
 
 @Module({
-  imports: [AuthModule, UsersModule],
+  imports: [
+    ClientsModule.register([
+      {
+        name: MATH_SERVICE,
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: parseInt(process.env.MATH_PORT, 10) || 3001
+        }
+      }
+    ]),
+    ConfigModule.forRoot({
+      isGlobal: true // makes the module globally available
+    }),
+    AuthModule,
+    UsersModule,
+    MathModule
+  ],
   controllers: [AppController],
   providers: [AppService]
 })
