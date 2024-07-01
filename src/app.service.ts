@@ -1,15 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { MATH_SERVICE } from 'math/src/app.constants'
+import { Client, ClientProxy, Transport } from '@nestjs/microservices'
 
 @Injectable()
 export class AppService {
-  constructor(@Inject(MATH_SERVICE) private readonly client: ClientProxy) {}
+  @Client({
+    transport: Transport.TCP,
+    options: {
+      host: 'localhost',
+      port: parseInt(process.env.MATH_PORT, 10) || 3001
+    }
+  })
+  private client: ClientProxy
 
   async getHello(): Promise<string> {
-    const pattern = { cmd: 'sum' }
     const payload = [1, 2, 3]
-    const result = await this.client.send<number>(pattern, payload)
+    const result = await this.client.send<number>({ cmd: 'sum' }, payload).toPromise()
     return `Hello World!, Sum = ${result}`
   }
 }
