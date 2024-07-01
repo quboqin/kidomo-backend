@@ -5,8 +5,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
-import { MathModule } from './math/math.module'
-import { MATH_SERVICE } from './math/math.constants'
+import { MATH_SERVICE } from '../math/src/app.constants'
 
 @Module({
   imports: [
@@ -24,8 +23,7 @@ import { MATH_SERVICE } from './math/math.constants'
       isGlobal: true // makes the module globally available
     }),
     AuthModule,
-    UsersModule,
-    MathModule
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService]
