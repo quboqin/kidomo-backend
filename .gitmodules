@@ -1,3 +1,7 @@
 [submodule "math"]
 	path = math
 	url = git@github.com:quboqin/kidomo-math.git
+
+[submodule "user"]
+	path = user
+	url = git@github.com:quboqin/kidomo-user.git	
