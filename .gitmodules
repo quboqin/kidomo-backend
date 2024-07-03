@@ -9,6 +9,11 @@
 [submodule "token"]
 	path = token
 	url = git@github.com:quboqin/kidomo-token.git
+	
 [submodule "permission"]
 	path = permission
 	url = git@github.com:quboqin/kidomo-permission.git
+
+[submodule "mailer"]
+	path = mailer
+	url = git@github.com:quboqin/kidomo-mailer.git
