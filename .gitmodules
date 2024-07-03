@@ -17,3 +17,6 @@
 [submodule "mailer"]
 	path = mailer
 	url = git@github.com:quboqin/kidomo-mailer.git
+[submodule "task"]
+	path = task
+	url = git@github.com:quboqin/kidomo-task.git
