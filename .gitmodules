@@ -20,3 +20,6 @@
 [submodule "task"]
 	path = task
 	url = git@github.com:quboqin/kidomo-task.git
+[submodule "gateway"]
+	path = gateway
+	url = git@github.com:quboqin/kidomo-gateway.git
