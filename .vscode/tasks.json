@@ -1,0 +1,90 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install and Start Mailer Service",
+      "type": "shell",
+      "command": "cd mailer && npm i && npm run start:dev",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "zsh",
+          "args": ["-c"]
+        }
+      }
+    },
+    {
+      "label": "Install and Start Permission Service",
+      "type": "shell",
+      "command": "cd permission && npm i && npm run start:dev",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "zsh",
+          "args": ["-c"]
+        }
+      }
+    },
+    {
+      "label": "Install and Start User Service",
+      "type": "shell",
+      "command": "cd user && npm i && npm run start:dev",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "zsh",
+          "args": ["-c"]
+        }
+      }
+    },
+    {
+      "label": "Install and Start Task Service",
+      "type": "shell",
+      "command": "cd task && npm i && npm run start:dev",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "zsh",
+          "args": ["-c"]
+        }
+      }
+    },
+    {
+      "label": "Install and Start Token Service",
+      "type": "shell",
+      "command": "cd token && npm i && npm run start:dev",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "zsh",
+          "args": ["-c"]
+        }
+      }
+    },
+    {
+      "label": "Install and Start Gateway Service",
+      "type": "shell",
+      "command": "cd gateway && npm i && npm run start:dev",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "zsh",
+          "args": ["-c"]
+        }
+      }
+    },
+    {
+      "label": "Start All Services",
+      "dependsOn": [
+        "Install and Start Mailer Service",
+        "Install and Start Permission Service",
+        "Install and Start User Service",
+        "Install and Start Task Service",
+        "Install and Start Token Service",
+        "Install and Start Gateway Service"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    }
+  ]
+}
