@@ -1,0 +1,125 @@
+version: "3"
+services:
+  gateway:
+    build: ./gateway
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/gateway:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - ${API_GATEWAY_PORT}:${API_GATEWAY_PORT}
+    depends_on:
+      - task
+      - token
+      - user
+      - permission
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/gateway
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  task:
+    build: ./task
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/task:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - ${TASK_SERVICE_PORT}:${TASK_SERVICE_PORT}
+    depends_on:
+      - mongodb
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/task
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  token:
+    build: ./token
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/token:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - ${TOKEN_SERVICE_PORT}:${TOKEN_SERVICE_PORT}
+    depends_on:
+      - mongodb
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/token
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  mailer:
+    build: ./mailer
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mailer:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - ${MAILER_SERVICE_PORT}:${MAILER_SERVICE_PORT}
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/mailer
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  permission:
+    build: ./permission
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/permission:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - ${PERMISSION_SERVICE_PORT}:${PERMISSION_SERVICE_PORT}
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/permission
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  user:
+    build: ./user
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/user:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - ${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
+    depends_on:
+      - mongodb
+      - mailer
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/user
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  mongodb:
+    build: ./db
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mongo:latest
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - .env.test
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - 27017:27017
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/db
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
