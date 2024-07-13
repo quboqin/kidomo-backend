@@ -125,6 +125,8 @@ services:
     hostname: ${MONGO_HOST}
     ports:
       - ${MONGO_PORT}:${MONGO_PORT}
+    networks:
+      - backend
     logging:
       driver: awslogs
       options:
