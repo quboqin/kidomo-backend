@@ -1,7 +1,7 @@
 # Steps
 
 ```bash
-cp .env.example .env
+cp .env.example .env.dev
 ./start-mongo-db.sh
 ```
 
@@ -12,7 +12,8 @@ Choose Run 'Start All Services' from the list of tasks.
 # Steps for local prod
 
 ```bash
-docker-compose -f docker-compose.local.yml up -d
+docker-compose -f docker-compose.local.yml --env-file .env.prod up -d
+docker-compose -f docker-compose.local.yml --env-file .env.prod down
 ```
 
 # Deploy on AWS

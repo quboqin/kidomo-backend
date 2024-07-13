@@ -2,7 +2,7 @@
 # Function to stop docker-compose services
 cleanup() {
   echo "Stopping docker-compose services..."
-  docker-compose -f docker-compose.db.yml down
+  docker-compose -f docker-compose.db.yml --env-file .env.dev down
   exit 0
 }
 
@@ -15,7 +15,7 @@ if [ "$1" == "--delete-db" ]; then
   rm -rf db/data
 fi
 
-docker-compose -f docker-compose.db.yml up -d
+docker-compose -f docker-compose.db.yml --env-file .env.dev up -d 
 
 # services=("user" "task" "mailer" "permission" "token" "gateway")
 # for service in "${services[@]}"; do

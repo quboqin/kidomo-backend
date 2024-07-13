@@ -13,7 +13,7 @@ services:
       - "./db/data/db-files:/data/db"
       - "./db/init/:/docker-entrypoint-initdb.d/"
     ports:
-      - 27017:27017
+      - ${MONGO_PORT}:${MONGO_PORT}
     networks:
       - backend
 networks:
