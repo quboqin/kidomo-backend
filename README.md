@@ -29,12 +29,22 @@ docker-compose -f docker-compose.test.awsecs.yml --env-file .env.test build
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 433946623370.dkr.ecr.us-east-1.amazonaws.com
 docker-compose -f docker-compose.test.awsecs.yml --env-file .env.test push
 
+brew install amazon-ecs-cli
+
+sudo curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
+sudo chmod +x /usr/local/bin/ecs-cli
+
 ecs-cli configure --cluster kidomo --default-launch-type FARGATE --region us-east-1 --config-name kidomo
+
+
+
 ecs-cli compose --file docker-compose.test.awsecs.yml create --cluster-config kidomo
+
+
+
+
 ecs-cli up --cluster-config kidomo compose --file docker-compose.test.awsecs.yml
 ecs-cli up --cluster-config kidomo --force
-
-brew install amazon-ecs-cli
 
 aws ec2 create-security-group --group-name kidomo-security-group --description "kidomo security group" --vpc-id vpc-0dc8904ded1451957
 aws ec2 authorize-security-group-ingress --group-id sg-0757a284fcbea985d --protocol tcp --port 80 --cidr 0.0.0.0/0
