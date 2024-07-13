@@ -1,9 +1,9 @@
 version: "3"
 services:
   gateway:
-    build: ./gateway
+    build: ./${API_GATEWAY_HOST}
     restart: always
-    hostname: gateway
+    hostname: ${API_GATEWAY_HOST}
     env_file:
       - .env.prod
     ports:
@@ -17,7 +17,7 @@ services:
       - ${USER_SERVICE_HOST}
       - ${PERMISSION_SERVICE_HOST}
   task:
-    build: ./task
+    build: ./${TASK_SERVICE_HOST}
     restart: always
     environment:
       MONGO_DSN: ${MONGO_DSN}
@@ -27,9 +27,9 @@ services:
     networks:
       - backend
     depends_on:
-      - db
+      - ${MONGO_HOST}
   token:
-    build: ./token
+    build: ./${TOKEN_SERVICE_HOST}
     restart: always
     environment:
       MONGO_DSN: ${MONGO_DSN}
@@ -39,9 +39,9 @@ services:
     networks:
       - backend
     depends_on:
-      - db
+      - ${MONGO_HOST}
   mailer:
-    build: ./mailer
+    build: ./${MAILER_SERVICE_HOST}
     restart: always
     environment:
       MAILER_DSN: ${MAILER_DSN}
@@ -52,7 +52,7 @@ services:
     networks:
       - backend
   permission:
-    build: ./permission
+    build: ./${PERMISSION_SERVICE_HOST}
     restart: always
     hostname: ${PERMISSION_SERVICE_HOST}
     ports:
@@ -60,7 +60,7 @@ services:
     networks:
       - backend
   user:
-    build: ./user
+    build: ./${USER_SERVICE_HOST}
     restart: always
     environment:
       MONGO_DSN: ${MONGO_DSN}
@@ -70,12 +70,12 @@ services:
     networks:
       - backend
     depends_on:
-      - mailer
-      - db
+      - ${MAILER_SERVICE_HOST}
+      - ${MONGO_HOST}
   db:
-    build: ./db
+    build: ./${MONGO_HOST}
     restart: always
-    hostname: db
+    hostname: ${MONGO_HOST}
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
