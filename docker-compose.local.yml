@@ -4,10 +4,20 @@ services:
     build: ./${API_GATEWAY_HOST}
     restart: always
     hostname: ${API_GATEWAY_HOST}
-    env_file:
-      - .env.prod
+    environment:
+      API_GATEWAY_PORT: ${API_GATEWAY_PORT}
+      TASK_SERVICE_HOST: ${TASK_SERVICE_HOST}
+      TASK_SERVICE_PORT: ${TASK_SERVICE_PORT}
+      TOKEN_SERVICE_HOST: ${TOKEN_SERVICE_HOST}
+      TOKEN_SERVICE_PORT: ${TOKEN_SERVICE_PORT}
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+      PERMISSION_SERVICE_HOST: ${PERMISSION_SERVICE_HOST}
+      PERMISSION_SERVICE_PORT: ${PERMISSION_SERVICE_PORT}
+      SSH_PUBLIC_KEY:
     ports:
       - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
+      - 2222:22
     networks:
       - backend
       - frontend

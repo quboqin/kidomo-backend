@@ -9,6 +9,9 @@ Go to View > Command Palette (or press Cmd+Shift+P on Mac).
 Type Tasks: Run Task and select it.
 Choose Run 'Start All Services' from the list of tasks.
 
+add the item below to your host file since other services are running out of docker network, so no dns serivce
+127.0.0.1 db
+
 # Steps for local prod
 
 ```bash
@@ -38,10 +41,10 @@ ecs-cli configure --cluster kidomo --default-launch-type FARGATE --region us-eas
 
 
 
-ecs-cli compose --file docker-compose.test.awsecs.yml create --cluster-config kidomo
+ecs-cli compose --file docker-compose.test.awsecs.tasks.yml create --cluster-config kidomo
 
 
-
+ssh -i ~/Downloads/mac.pem root@3.88.103.87 -p 2222
 
 ecs-cli up --cluster-config kidomo compose --file docker-compose.test.awsecs.yml
 ecs-cli up --cluster-config kidomo --force

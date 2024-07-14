@@ -1,0 +1,157 @@
+version: "3"
+services:
+  gateway:
+    build: ./gateway
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/gateway:latest
+    env_file:
+      - .env.test
+    environment:
+      API_GATEWAY_PORT: 8000
+      TASK_SERVICE_HOST: task
+      TASK_SERVICE_PORT: 8001
+      TOKEN_SERVICE_HOST: token
+      TOKEN_SERVICE_PORT: 8002
+      USER_SERVICE_HOST: user
+      USER_SERVICE_PORT: 8003
+      PERMISSION_SERVICE_HOST: permission
+      PERMISSION_SERVICE_PORT: 8005
+      SSH_PUBLIC_KEY:
+    ports:
+      - 8000:8000
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - task
+      - token
+      - user
+      - permission
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/gateway
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  task:
+    build: ./task
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/task:latest
+    env_file:
+      - .env.test
+    environment:
+      MONGO_DSN: mongodb://test:password@db:27017/test_db
+    ports:
+      - 8001:8001
+    networks:
+      - backend
+    depends_on:
+      - db
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/task
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  token:
+    build: ./token
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/token:latest
+    env_file:
+      - .env.test
+    environment:
+      TOKEN_SERVICE_PORT: 8002
+      MONGO_DSN: mongodb://test:password@db:27017/test_db
+    ports:
+      - 8002:8002
+    networks:
+      - backend
+    depends_on:
+      - db
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/token
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  mailer:
+    build: ./mailer
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mailer:latest
+    env_file:
+      - .env.test
+    environment:
+      MAILER_SERVICE_PORT: 8004
+      MAILER_DISABLED: 0
+      MAILER_DSN: smtps://test@kidomo.com:password@kidomo.com
+      MAILER_FROM: admin@kidomo.com
+    ports:
+      - 8004:8004
+    networks:
+      - backend
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/mailer
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  permission:
+    build: ./permission
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/permission:latest
+    env_file:
+      - .env.test
+    environment:
+      PERMISSION_SERVICE_PORT: 8005
+    ports:
+      - 8005:8005
+    networks:
+      - backend
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/permission
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  user:
+    build: ./user
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/user:latest
+    env_file:
+      - .env.test
+    environment:
+      MONGO_DSN: mongodb://test:password@db:27017/test_db
+    ports:
+      - 8003:8003
+    networks:
+      - backend
+    depends_on:
+      - mailer
+      - db
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/user
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+  db:
+    build: ./db
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mongo:latest
+    env_file:
+      - .env.test
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: test_db
+      MONGO_USER: test
+      MONGO_PASSWORD: password
+    ports:
+      - 27017:27017
+    networks:
+      - backend
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/db
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    external:
+      name: infrastructure

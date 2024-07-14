@@ -7,6 +7,8 @@ services:
     restart: always
     env_file:
       - .env.test
+    environment:
+      SSH_PUBLIC_KEY:
     hostname: ${API_GATEWAY_HOST}
     ports:
       - ${API_GATEWAY_PORT}:${API_GATEWAY_PORT}
