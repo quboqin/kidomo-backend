@@ -15,7 +15,6 @@ services:
       USER_SERVICE_PORT: 8003
       PERMISSION_SERVICE_HOST: permission
       PERMISSION_SERVICE_PORT: 8005
-      SSH_PUBLIC_KEY:
     ports:
       - 8000:8000
     networks:
@@ -71,6 +70,26 @@ services:
         awslogs-group: /ecs/token
         awslogs-region: us-east-1
         awslogs-stream-prefix: ecs
+  user:
+    build: ./user
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/user:latest
+    env_file:
+      - .env.test
+    environment:
+      MONGO_DSN: mongodb://test:password@localhost:27017/test_db
+    ports:
+      - 8003:8003
+    networks:
+      - backend
+    depends_on:
+      - mailer
+      - db
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/user
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
   mailer:
     build: ./mailer
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mailer:latest
@@ -106,26 +125,6 @@ services:
       driver: awslogs
       options:
         awslogs-group: /ecs/permission
-        awslogs-region: us-east-1
-        awslogs-stream-prefix: ecs
-  user:
-    build: ./user
-    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/user:latest
-    env_file:
-      - .env.test
-    environment:
-      MONGO_DSN: mongodb://test:password@localhost:27017/test_db
-    ports:
-      - 8003:8003
-    networks:
-      - backend
-    depends_on:
-      - mailer
-      - db
-    logging:
-      driver: awslogs
-      options:
-        awslogs-group: /ecs/user
         awslogs-region: us-east-1
         awslogs-stream-prefix: ecs
   db:

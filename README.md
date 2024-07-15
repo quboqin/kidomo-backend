@@ -15,8 +15,8 @@ add the item below to your host file since other services are running out of doc
 # Steps for local prod
 
 ```bash
-docker-compose -f docker-compose.local.yml --env-file .env.prod up -d
-docker-compose -f docker-compose.local.yml --env-file .env.prod down
+docker-compose -f docker-compose.yml --env-file .env.test up -d
+docker-compose -f docker-compose.yml --env-file .env.test down
 ```
 
 # Deploy on AWS
@@ -28,20 +28,17 @@ curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
 aws configure
 
 # aws ecr create-repository --repository-name gateway
-docker-compose -f docker-compose.test.awsecs.yml --env-file .env.test build
+docker-compose -f docker-compose.yml --env-file .env.test.aws build
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 433946623370.dkr.ecr.us-east-1.amazonaws.com
-docker-compose -f docker-compose.test.awsecs.yml --env-file .env.test push
+docker-compose -f docker-compose.yml --env-file .env.test.aws push
 
 brew install amazon-ecs-cli
-
+or
 sudo curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
 sudo chmod +x /usr/local/bin/ecs-cli
 
 ecs-cli configure --cluster kidomo --default-launch-type FARGATE --region us-east-1 --config-name kidomo
-
-
-
-ecs-cli compose --file docker-compose.test.awsecs.tasks.yml create --cluster-config kidomo
+ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config kidomo
 
 
 ssh -i ~/Downloads/mac.pem root@3.88.103.87 -p 2222

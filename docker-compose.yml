@@ -2,8 +2,8 @@ version: "3"
 services:
   gateway:
     build: ./${API_GATEWAY_HOST}
-    restart: always
-    hostname: ${API_GATEWAY_HOST}
+    image: ${AWS_ECR_URI}${API_GATEWAY_HOST}:latest
+    platform: ${PLATFORM}
     environment:
       API_GATEWAY_PORT: ${API_GATEWAY_PORT}
       TASK_SERVICE_HOST: ${TASK_SERVICE_HOST}
@@ -14,10 +14,9 @@ services:
       USER_SERVICE_PORT: ${USER_SERVICE_PORT}
       PERMISSION_SERVICE_HOST: ${PERMISSION_SERVICE_HOST}
       PERMISSION_SERVICE_PORT: ${PERMISSION_SERVICE_PORT}
-      SSH_PUBLIC_KEY:
+    hostname: ${API_GATEWAY_HOST}
     ports:
       - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
-      - 2222:22
     networks:
       - backend
       - frontend
@@ -28,7 +27,8 @@ services:
       - ${PERMISSION_SERVICE_HOST}
   task:
     build: ./${TASK_SERVICE_HOST}
-    restart: always
+    image: ${AWS_ECR_URI}${TASK_SERVICE_HOST}:latest
+    platform: ${PLATFORM}
     environment:
       MONGO_DSN: ${MONGO_DSN}
     hostname: ${TASK_SERVICE_HOST}
@@ -40,7 +40,8 @@ services:
       - ${MONGO_HOST}
   token:
     build: ./${TOKEN_SERVICE_HOST}
-    restart: always
+    image: ${AWS_ECR_URI}${TOKEN_SERVICE_HOST}:latest
+    platform: ${PLATFORM}
     environment:
       MONGO_DSN: ${MONGO_DSN}
     hostname: ${TOKEN_SERVICE_HOST}
@@ -50,28 +51,10 @@ services:
       - backend
     depends_on:
       - ${MONGO_HOST}
-  mailer:
-    build: ./${MAILER_SERVICE_HOST}
-    restart: always
-    environment:
-      MAILER_DSN: ${MAILER_DSN}
-      MAILER_FROM: ${MAILER_FROM}
-    hostname: ${MAILER_SERVICE_HOST}
-    ports:
-      - ${MAILER_SERVICE_PORT}:${MAILER_SERVICE_PORT}
-    networks:
-      - backend
-  permission:
-    build: ./${PERMISSION_SERVICE_HOST}
-    restart: always
-    hostname: ${PERMISSION_SERVICE_HOST}
-    ports:
-      - ${PERMISSION_SERVICE_PORT}:${PERMISSION_SERVICE_PORT}
-    networks:
-      - backend
   user:
     build: ./${USER_SERVICE_HOST}
-    restart: always
+    image: ${AWS_ECR_URI}${USER_SERVICE_HOST}:latest
+    platform: ${PLATFORM}
     environment:
       MONGO_DSN: ${MONGO_DSN}
     hostname: ${USER_SERVICE_HOST}
@@ -82,16 +65,38 @@ services:
     depends_on:
       - ${MAILER_SERVICE_HOST}
       - ${MONGO_HOST}
+  mailer:
+    build: ./${MAILER_SERVICE_HOST}
+    image: ${AWS_ECR_URI}${MAILER_SERVICE_HOST}:latest
+    platform: ${PLATFORM}
+    environment:
+      MAILER_DSN: ${MAILER_DSN}
+      MAILER_FROM: ${MAILER_FROM}
+    hostname: ${MAILER_SERVICE_HOST}
+    ports:
+      - ${MAILER_SERVICE_PORT}:${MAILER_SERVICE_PORT}
+    networks:
+      - backend
+  permission:
+    build: ./${PERMISSION_SERVICE_HOST}
+    image: ${AWS_ECR_URI}${PERMISSION_SERVICE_HOST}:latest
+    platform: ${PLATFORM}
+    hostname: ${PERMISSION_SERVICE_HOST}
+    ports:
+      - ${PERMISSION_SERVICE_PORT}:${PERMISSION_SERVICE_PORT}
+    networks:
+      - backend
   db:
     build: ./${MONGO_HOST}
-    restart: always
-    hostname: ${MONGO_HOST}
+    image: ${AWS_ECR_URI}mongo:latest
+    platform: ${PLATFORM}
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
+    hostname: ${MONGO_HOST}
     ports:
       - ${MONGO_PORT}:${MONGO_PORT}
     networks:

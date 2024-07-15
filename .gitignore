@@ -39,6 +39,7 @@ lerna-debug.log*
 .env.prod
 .env.dev
 .env.test
+.env.test.aws
 .env
 
 # temp directory
