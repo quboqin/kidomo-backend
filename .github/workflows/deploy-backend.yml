@@ -12,8 +12,8 @@ env:
   CLUSTER_NAME: "kidomo"
   PROD_SERVICE_NAME: "prod"
   TEST_SERVICE_NAME: "test"
-  DOCKER_COMPOSE_PROD: "docker-compose.prod.awsecs.yml"
-  DOCKER_COMPOSE_TEST: "docker-compose.test.awsecs.yml"
+  DOCKER_COMPOSE_PROD: "docker-compose.yml"
+  DOCKER_COMPOSE_TEST: "docker-compose.yml"
 
 jobs:
   deploy:
@@ -80,4 +80,5 @@ jobs:
           GATEWAY_SERVICE_PORT: ${{ vars.GATEWAY_SERVICE_PORT }}
         run: |
           ecs-cli configure --cluster $CLUSTER_NAME --default-launch-type FARGATE --region $AWS_REGION --config-name $CLUSTER_NAME
-          ecs-cli compose --file docker-compose.yml service up --region $AWS_REGION --cluster-config $CLUSTER_NAME
+          ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config $CLUSTER_NAME
+          ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config $CLUSTER_NAME service up --create-log-groups
