@@ -9,11 +9,30 @@ on:
 env:
   AWS_REGION: "us-east-1"
   ECR_REPOSITORY: "433946623370.dkr.ecr.us-east-1.amazonaws.com"
+  AWS_ECR_URI: "433946623370.dkr.ecr.us-east-1.amazonaws.com/"
   CLUSTER_NAME: "kidomo"
   PROD_SERVICE_NAME: "prod"
   TEST_SERVICE_NAME: "test"
   DOCKER_COMPOSE_PROD: "docker-compose.yml"
   DOCKER_COMPOSE_TEST: "docker-compose.yml"
+  MONGO_HOST: db
+  MONGO_PORT: 27017
+  MONGO_ROOT_USER: admin
+  API_GATEWAY_PORT: 8000
+  API_GATEWAY_HOST: gateway
+  TASK_SERVICE_PORT: 8001
+  TASK_SERVICE_HOST: task
+  TOKEN_SERVICE_PORT: 8002
+  TOKEN_SERVICE_HOST: token
+  USER_SERVICE_PORT: 8003
+  USER_SERVICE_HOST: user
+  MAILER_SERVICE_PORT: 8004
+  MAILER_SERVICE_HOST: mailer
+  PERMISSION_SERVICE_PORT: 8005
+  PERMISSION_SERVICE_HOST: permission
+  BASE_URI: http://localhost
+  MAILER_DISABLED: 0
+  MAILER_FROM: "admin@kidomo.com"
 
 jobs:
   deploy:
@@ -24,6 +43,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          submodules: true # Ensure submodules are checked out
+
+      - name: Update submodules
+        run: |
+          git submodule init
+          git submodule update
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -72,12 +98,12 @@ jobs:
           MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
           MONGO_USER: ${{ secrets.MONGO_USER }}
           MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-          TASK_SERVICE_PORT: ${{ vars.TASK_SERVICE_PORT }}
-          TOKEN_SERVICE_PORT: ${{ vars.TOKEN_SERVICE_PORT }}
-          MAILER_SERVICE_PORT: ${{ vars.MAILER_SERVICE_PORT }}
-          PERMISSION_SERVICE_PORT: ${{ vars.PERMISSION_SERVICE_PORT }}
-          USER_SERVICE_PORT: ${{ vars.USER_SERVICE_PORT }}
-          GATEWAY_SERVICE_PORT: ${{ vars.GATEWAY_SERVICE_PORT }}
+          TASK_SERVICE_PORT: ${{ env.TASK_SERVICE_PORT }}
+          TOKEN_SERVICE_PORT: ${{ env.TOKEN_SERVICE_PORT }}
+          MAILER_SERVICE_PORT: ${{ env.MAILER_SERVICE_PORT }}
+          PERMISSION_SERVICE_PORT: ${{ env.PERMISSION_SERVICE_PORT }}
+          USER_SERVICE_PORT: ${{ env.USER_SERVICE_PORT }}
+          GATEWAY_SERVICE_PORT: ${{ env.GATEWAY_SERVICE_PORT }}
         run: |
           ecs-cli configure --cluster $CLUSTER_NAME --default-launch-type FARGATE --region $AWS_REGION --config-name $CLUSTER_NAME
           ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config $CLUSTER_NAME

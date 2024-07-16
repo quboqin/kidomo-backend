@@ -42,3 +42,5 @@ ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config k
 ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config kidomo service up --create-log-groups
 ecs-cli compose --cluster-config kidomo service ps
 ```
+
+SSH_PRIVATE_KEY
