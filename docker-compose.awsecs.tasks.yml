@@ -3,6 +3,8 @@ services:
   gateway:
     build: ./gateway
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/gateway:latest
+    env_file:
+      - env.test
     environment:
       API_GATEWAY_PORT: 8000
       TASK_SERVICE_HOST: task
@@ -32,6 +34,8 @@ services:
   task:
     build: ./task
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/task:latest
+    env_file:
+      - env.test
     environment:
       MONGO_DSN: mongodb://test:password@localhost:27017/test_db
     ports:
@@ -49,6 +53,8 @@ services:
   token:
     build: ./token
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/token:latest
+    env_file:
+      - env.test
     environment:
       TOKEN_SERVICE_PORT: 8002
       MONGO_DSN: mongodb://test:password@localhost:27017/test_db
@@ -67,6 +73,8 @@ services:
   user:
     build: ./user
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/user:latest
+    env_file:
+      - env.test
     environment:
       MONGO_DSN: mongodb://test:password@localhost:27017/test_db
     ports:
@@ -85,6 +93,8 @@ services:
   mailer:
     build: ./mailer
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mailer:latest
+    env_file:
+      - env.test
     environment:
       MAILER_SERVICE_PORT: 8004
       MAILER_DISABLED: 0
@@ -103,6 +113,8 @@ services:
   permission:
     build: ./permission
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/permission:latest
+    env_file:
+      - env.test
     environment:
       PERMISSION_SERVICE_PORT: 8005
     ports:
@@ -118,6 +130,8 @@ services:
   db:
     build: ./db
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mongo:latest
+    env_file:
+      - env.test
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
