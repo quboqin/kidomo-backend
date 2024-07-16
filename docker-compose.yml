@@ -16,7 +16,7 @@ services:
       PERMISSION_SERVICE_PORT: ${PERMISSION_SERVICE_PORT}
     hostname: ${API_GATEWAY_HOST}
     ports:
-      - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
+      - ${API_GATEWAY_PORT}:${API_GATEWAY_PORT}
     networks:
       - backend
       - frontend

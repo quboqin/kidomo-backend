@@ -33,26 +33,12 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 docker-compose -f docker-compose.yml --env-file .env.test.aws push
 
 brew install amazon-ecs-cli
-or
+
 sudo curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
 sudo chmod +x /usr/local/bin/ecs-cli
 
 ecs-cli configure --cluster kidomo --default-launch-type FARGATE --region us-east-1 --config-name kidomo
 ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config kidomo
-
-
-ssh -i ~/Downloads/mac.pem root@3.88.103.87 -p 2222
-
-ecs-cli up --cluster-config kidomo compose --file docker-compose.test.awsecs.yml
-ecs-cli up --cluster-config kidomo --force
-
-aws ec2 create-security-group --group-name kidomo-security-group --description "kidomo security group" --vpc-id vpc-0dc8904ded1451957
-aws ec2 authorize-security-group-ingress --group-id sg-0757a284fcbea985d --protocol tcp --port 80 --cidr 0.0.0.0/0
-ecs-cli compose --file docker-compose.test.awsecs.yml --ecs-params ecs-params.yml service up --cluster-config kidomo --create-log-groups
+ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config kidomo service up --create-log-groups
 ecs-cli compose --cluster-config kidomo service ps
-```
-
-```bash
-aws iam create-role --role-name ecsTaskExecutionRole --assume-role-policy-document ecs-trust-policy.json
-aws iam put-role-policy --role-name ecsTaskExecutionRole --policy-name ecs-task-execution-role-policy --policy-document ecs-task-execution-role-policy.json
 ```
