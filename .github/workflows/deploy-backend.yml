@@ -120,4 +120,4 @@ jobs:
         run: |
           ecs-cli configure --cluster $CLUSTER_NAME --default-launch-type FARGATE --region $AWS_REGION --config-name $CLUSTER_NAME
           # ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config $CLUSTER_NAME
-          # ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config $CLUSTER_NAME service up --create-log-groups
+          ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config $CLUSTER_NAME service up --create-log-groups
