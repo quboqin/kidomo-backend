@@ -95,8 +95,8 @@ jobs:
           MONGO_USER: ${{env.MONGO_USER}}
           MONGO_PASSWORD: ${{secrets.MONGO_PASSWORD}}
         run: |
-          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} build
-          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} push
+          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env.test build
+          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env.test push
 
       - name: Deploy to ECS
         env:
@@ -104,18 +104,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_REGION }}
           CLUSTER_NAME: ${{ env.CLUSTER_NAME }}
-          SERVICE_NAME: ${{ steps.set-env-vars.outputs.service_name }}
-          MONGO_ROOT_USER: ${{ secrets.MONGO_ROOT_USER }}
-          MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
-          MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
-          MONGO_USER: ${{ secrets.MONGO_USER }}
-          MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-          TASK_SERVICE_PORT: ${{ env.TASK_SERVICE_PORT }}
-          TOKEN_SERVICE_PORT: ${{ env.TOKEN_SERVICE_PORT }}
-          MAILER_SERVICE_PORT: ${{ env.MAILER_SERVICE_PORT }}
-          PERMISSION_SERVICE_PORT: ${{ env.PERMISSION_SERVICE_PORT }}
-          USER_SERVICE_PORT: ${{ env.USER_SERVICE_PORT }}
-          GATEWAY_SERVICE_PORT: ${{ env.GATEWAY_SERVICE_PORT }}
         run: |
           ecs-cli configure --cluster $CLUSTER_NAME --default-launch-type FARGATE --region $AWS_REGION --config-name $CLUSTER_NAME
           ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config $CLUSTER_NAME
