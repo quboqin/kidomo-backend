@@ -38,11 +38,9 @@ brew install amazon-ecs-cli
 sudo curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
 sudo chmod +x /usr/local/bin/ecs-cli
 
-cat env >> .env.test
+cat env .env.test > .env.test.aws
 ecs-cli configure --cluster kidomo --default-launch-type FARGATE --region us-east-1 --config-name kidomo
 ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config kidomo
 ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config kidomo service up --create-log-groups
 ecs-cli compose --cluster-config kidomo service ps
 ```
-
-SSH_PRIVATE_KEY

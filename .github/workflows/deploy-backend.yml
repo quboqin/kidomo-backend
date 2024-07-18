@@ -16,23 +16,6 @@ env:
   TEST_SERVICE_NAME: "test"
   DOCKER_COMPOSE_PROD: "docker-compose.yml"
   DOCKER_COMPOSE_TEST: "docker-compose.yml"
-  MONGO_HOST: db
-  MONGO_PORT: 27017
-  MONGO_ROOT_USER: admin
-  API_GATEWAY_PORT: 8000
-  API_GATEWAY_HOST: gateway
-  TASK_SERVICE_PORT: 8001
-  TASK_SERVICE_HOST: task
-  TOKEN_SERVICE_PORT: 8002
-  TOKEN_SERVICE_HOST: token
-  USER_SERVICE_PORT: 8003
-  USER_SERVICE_HOST: user
-  MAILER_SERVICE_PORT: 8004
-  MAILER_SERVICE_HOST: mailer
-  PERMISSION_SERVICE_PORT: 8005
-  PERMISSION_SERVICE_HOST: permission
-  BASE_URI: http://localhost
-  MAILER_FROM: "admin@kidomo.com"
 
 jobs:
   deploy:
@@ -88,6 +71,7 @@ jobs:
       - name: Build and push Docker images
         env:
           PLATFORM: ${{env.PLATFORM}}
+          AWS_ECR_URI: ${{env.AWS_ECR_URI}}
           MONGO_DSN: ${{env.MONGO_DSN}}
           MAILER_DSN: ${{env.MAILER_DSN}}
           MONGO_ROOT_PASSWORD: ${{secrets.MONGO_ROOT_PASSWORD}}
@@ -95,8 +79,8 @@ jobs:
           MONGO_USER: ${{env.MONGO_USER}}
           MONGO_PASSWORD: ${{secrets.MONGO_PASSWORD}}
         run: |
-          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env.test --env-file .env.aws --env-file env build
-          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env.test --env-file .env.aws --env-file env push
+          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env build
+          docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env push
 
       - name: Deploy to ECS
         env:

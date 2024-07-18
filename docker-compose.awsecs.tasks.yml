@@ -105,7 +105,7 @@ services:
         awslogs-stream-prefix: ecs
   db:
     build: ./db
-    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mongo:latest
+    image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/db:latest
     env_file:
       - .env.test.aws
     environment:
