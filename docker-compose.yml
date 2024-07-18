@@ -88,7 +88,7 @@ services:
       - backend
   db:
     build: ./${MONGO_HOST}
-    image: ${AWS_ECR_URI}mongo:latest
+    image: ${AWS_ECR_URI}${MONGO_HOST}:latest
     platform: ${PLATFORM}
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
@@ -101,6 +101,8 @@ services:
       - ${MONGO_PORT}:${MONGO_PORT}
     networks:
       - backend
+    volumes:
+      - "./db/data/db-files:/data/db"
 networks:
   backend:
     driver: bridge

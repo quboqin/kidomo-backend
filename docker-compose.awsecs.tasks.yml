@@ -4,7 +4,7 @@ services:
     build: ./gateway
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/gateway:latest
     env_file:
-      - env.test
+      - .env.test.aws
     ports:
       - 8000:8000
     networks:
@@ -25,9 +25,7 @@ services:
     build: ./task
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/task:latest
     env_file:
-      - env.test
-    environment:
-      MONGO_DSN: mongodb://test:password@localhost:27017/test_db
+      - .env.test.aws
     ports:
       - 8001:8001
     networks:
@@ -44,7 +42,7 @@ services:
     build: ./token
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/token:latest
     env_file:
-      - env.test
+      - .env.test.aws
     ports:
       - 8002:8002
     networks:
@@ -61,7 +59,7 @@ services:
     build: ./user
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/user:latest
     env_file:
-      - env.test
+      - .env.test.aws
     ports:
       - 8003:8003
     networks:
@@ -79,7 +77,7 @@ services:
     build: ./mailer
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mailer:latest
     env_file:
-      - env.test
+      - .env.test.aws
     ports:
       - 8004:8004
     networks:
@@ -94,7 +92,7 @@ services:
     build: ./permission
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/permission:latest
     env_file:
-      - env.test
+      - .env.test.aws
     ports:
       - 8005:8005
     networks:
@@ -109,7 +107,7 @@ services:
     build: ./db
     image: 433946623370.dkr.ecr.us-east-1.amazonaws.com/mongo:latest
     env_file:
-      - env.test
+      - .env.test.aws
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
