@@ -88,17 +88,15 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_REGION }}
           CLUSTER_NAME: ${{ env.CLUSTER_NAME }}
-          MONGO_DSN: mongodb://test:password@localhost:27017/test_db
-          MONGO_DATABASE: test_db
-          MONGO_USER: test
-          MONGO_PASSWORD: password
-          MONGO_ROOT_USER: admin
-          MONGO_ROOT_PASSWORD: password
-          MAILER_DISABLED: 0
-          MAILER_DSN: smtps://test@kidomo.com:password@kidomo.com
-          MAILER_FROM: admin@kidomo.com
         run: |
-          cp env .env.test.aws
+          echo "
+          MONGO_DSN=mongodb://test:password@localhost:27017/test_db
+          MONGO_DATABASE=test_db
+          MONGO_USER=test
+          MONGO_PASSWORD=password
+          MONGO_ROOT_USER=admin
+          MONGO_ROOT_PASSWORD=password" > .env.ecs        
+          cat env .env.ecs  > .env.test.aws
           ecs-cli configure --cluster $CLUSTER_NAME --default-launch-type FARGATE --region $AWS_REGION --config-name $CLUSTER_NAME
           ecs-cli compose --file docker-compose.awsecs.tasks.yml create --cluster-config $CLUSTER_NAME
           ecs-cli compose --file docker-compose.awsecs.tasks.yml --ecs-params ecs-params.yml --cluster-config $CLUSTER_NAME service up --create-log-groups
