@@ -76,14 +76,14 @@ jobs:
 
       - name: Generate .env file
         run: |
-          echo "MONGO_DATABASE=${{ vars.MONGO_DATABASE }}" >> .env.test
-          echo "MONGO_DSN=${{ vars.MONGO_DSN }}" >> .env.test
-          echo "MONGO_USER=${{ vars.MONGO_USER }}" >> .env.test
-          echo "MAILER_FROM=${{ vars.MAILER_FROM }}" >> .env.test
-          echo "MAILER_DSN=${{ vars.MAILER_DSN }}" >> .env.test
-          echo "MAILER_DISABLED=${{ vars.MAILER_DISABLED }}" >> .env.test
-          echo "MONGO_USER=${{ vars.MONGO_USER }}" >> .env.test
-          echo "MONGO_ROOT_USER=${{ vars.MONGO_ROOT_USER }}" >> .env.test
+          echo "MONGO_DATABASE=${{ env.MONGO_DATABASE }}" >> .env.test
+          echo "MONGO_DSN=${{ env.MONGO_DSN }}" >> .env.test
+          echo "MONGO_USER=${{ env.MONGO_USER }}" >> .env.test
+          echo "MAILER_FROM=${{ env.MAILER_FROM }}" >> .env.test
+          echo "MAILER_DSN=${{ env.MAILER_DSN }}" >> .env.test
+          echo "MAILER_DISABLED=${{ env.MAILER_DISABLED }}" >> .env.test
+          echo "MONGO_USER=${{ env.MONGO_USER }}" >> .env.test
+          echo "MONGO_ROOT_USER=${{ env.MONGO_ROOT_USER }}" >> .env.test
           echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env.test
           echo "MONGO_ROOT_PASSWORD=${{ secrets.MONGO_ROOT_PASSWORD }}" >> .env.test
 
