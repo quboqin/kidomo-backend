@@ -78,12 +78,6 @@ jobs:
         env:
           PLATFORM: ${{env.PLATFORM}}
           AWS_ECR_URI: ${{env.AWS_ECR_URI}}
-          MONGO_DSN: ${{env.MONGO_DSN}}
-          MAILER_DSN: ${{env.MAILER_DSN}}
-          MONGO_ROOT_PASSWORD: ${{secrets.MONGO_ROOT_PASSWORD}}
-          MONGO_DATABASE: ${{env.MONGO_DATABASE}}
-          MONGO_USER: ${{env.MONGO_USER}}
-          MONGO_PASSWORD: ${{secrets.MONGO_PASSWORD}}
         run: |
           docker-compose --version
           cp env.aws.example .env.aws
