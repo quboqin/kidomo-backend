@@ -79,6 +79,7 @@ jobs:
           MONGO_USER: ${{env.MONGO_USER}}
           MONGO_PASSWORD: ${{secrets.MONGO_PASSWORD}}
         run: |
+          docker-compose --version
           cp env.aws.example .env.aws
           docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env --env-file .env.aws --env-file .env.test build
           docker-compose -f ${{ steps.set-env-vars.outputs.compose_file }} --env-file env --env-file .env.aws --env-file .env.test push
