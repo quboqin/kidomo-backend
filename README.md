@@ -1,7 +1,7 @@
 # Steps
 
 ```bash
-cp .env.example .env
+cp .env.example .env.dev
 ./start-mongo-db.sh
 ```
 
